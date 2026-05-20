@@ -13,6 +13,8 @@ import Products from './pages/Products';
 import PaymentMethod from './pages/PaymentMehtod';
 import Order from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+import About from './pages/About';
 
 function App() {
   return (
@@ -20,11 +22,15 @@ function App() {
       <div className="wrapper d-flex flex-column min-vh-100">
         <Navbar />
 
-        <main className="flex-grow-1 pt-5 mt-4">
+        <main className="flex-grow-1 pt-5 mt-4 bg-body">
           <div className="container-fluid px-4">
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+
+              <Route path="/home" element={<Home />} />
+              <Route path="/about" element={<About />} />
+
               <Route
                 path="/"
                 element={

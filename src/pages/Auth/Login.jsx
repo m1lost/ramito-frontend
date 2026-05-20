@@ -20,8 +20,18 @@ export default function Login() {
   };
 
   return (
-    <div className="card p-4">
-      <h3>Login</h3>
+    <div
+      className="card p-4 align-content-center"
+      style={{
+        maxWidth: '400px',
+        margin: '0 auto',
+        backgroundColor: '#bebec5'
+      }}
+    >
+      <div className="mb-3 text-center">
+        <h2>Login</h2>
+      </div>
+      <hr />
       <form onSubmit={submit}>
         <div className="mb-3">
           <label className="form-label">Email</label>

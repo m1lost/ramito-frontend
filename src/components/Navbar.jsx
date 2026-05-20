@@ -11,7 +11,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate('/home');
   };
 
   return (
@@ -19,9 +19,11 @@ export default function Navbar() {
       <div className="container-fluid px-4">
         <BSNavbar.Brand href="/">RAMITO</BSNavbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/home">Home</Nav.Link>
+          <Nav.Link href="/about">About</Nav.Link>
           {token ? (
             <>
+              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
               <Nav.Link href="/users">Users</Nav.Link>
               <Nav.Link href="/category">Categories</Nav.Link>
               <Nav.Link href="/payment-method">Payment Methods</Nav.Link>
