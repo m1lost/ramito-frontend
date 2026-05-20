@@ -40,6 +40,11 @@ export const toggleUserStatus = createAsyncThunk(
   }
 );
 
+export const getProfile = createAsyncThunk('users/getProfile', async () => {
+  const res = await usersService.getProfileApi();
+  return res.data;
+});
+
 const usersSlice = createSlice({
   name: 'users',
   initialState: { list: [], status: 'idle', error: null },
@@ -79,6 +84,9 @@ const usersSlice = createSlice({
               }
             : u
         );
+      })
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.profile = action.payload;
       });
   }
 });

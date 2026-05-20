@@ -7,6 +7,6 @@ export const updateUserApi = (id, data) => api.put(`/user/${id}`, data);
 export const deleteUserApi = (id) => api.delete(`/user/${id}`);
 export const setUserRolesApi = (id, roleIds) =>
   api.put(`/user/${id}/roles`, { roleIds });
-export const getProfileApi = () => api.get('/users/me');
+export const getProfileApi = () => api.get('/user/profile');
 export const toggleUserStatusApi = (id) =>
   api.patch(`/user/${id}/toggle-active`);

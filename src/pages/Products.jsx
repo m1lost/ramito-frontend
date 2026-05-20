@@ -9,11 +9,14 @@ import {
 } from '../features/products/productsSlice';
 import { fetchCategories } from '../features/categories/categoriesSlice';
 import { fetchOrders, createOrder } from '../features/orders/ordersSlice';
+import { fetchPaymentMethod } from '../features/paymentMethod/paymentMethodSlice';
 
 export default function Products() {
   const dispatch = useDispatch();
   const products = useSelector((s) => s.products.list);
   const categories = useSelector((s) => s.categories.list);
+  const paymentMethods = useSelector((state) => state.paymentMethods.list);
+  console.log(paymentMethods);
   const [form, setForm] = useState({
     name: '',
     categoryId: '',
@@ -28,6 +31,7 @@ export default function Products() {
     dispatch(fetchProducts());
     dispatch(fetchCategories());
     dispatch(fetchOrders());
+    dispatch(fetchPaymentMethod());
   }, [dispatch]);
 
   const handleFile = (e) =>
@@ -72,6 +76,8 @@ export default function Products() {
   };
 
   const apiBase = import.meta.env.VITE_API_URL.replace('/api', '');
+
+  const activePaymentMethods = paymentMethods.filter((pm) => pm.isActive);
 
   const [cart, setCart] = useState([]);
   const addToCart = (product) => {
@@ -151,7 +157,7 @@ export default function Products() {
       setCart([]);
 
       setCheckoutForm({
-        paymentMethod: 'COD',
+        paymentMethod: '',
         shippingFullName: '',
         shippingPhoneNumber: '',
         shippingAddress: '',
@@ -446,8 +452,13 @@ export default function Products() {
                   }))
                 }
               >
-                <option value="COD">COD</option>
-                <option value="BANK_TRANSFER">Bank Transfer</option>
+                <option value="">Select Payment Method</option>
+
+                {activePaymentMethods.map((pm) => (
+                  <option key={pm.id} value={pm.name}>
+                    {pm.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

@@ -22,7 +22,7 @@ function App() {
       <div className="wrapper d-flex flex-column min-vh-100">
         <Navbar />
 
-        <main className="flex-grow-1 pt-5 mt-4 bg-body">
+        <main className="flex-grow-1 pt-5 mt-4 pb-4 mb-5">
           <div className="container-fluid px-4">
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -42,7 +42,7 @@ function App() {
               <Route
                 path="/users"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin', 'staff']}>
                     <Users />
                   </ProtectedRoute>
                 }
@@ -50,7 +50,7 @@ function App() {
               <Route
                 path="/roles"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin', 'staff']}>
                     <Roles />
                   </ProtectedRoute>
                 }
@@ -58,7 +58,7 @@ function App() {
               <Route
                 path="/category"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin', 'staff']}>
                     <Categories />
                   </ProtectedRoute>
                 }
@@ -74,7 +74,7 @@ function App() {
               <Route
                 path="/payment-method"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin', 'staff']}>
                     <PaymentMethod />
                   </ProtectedRoute>
                 }
