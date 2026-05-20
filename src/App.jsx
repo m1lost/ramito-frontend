@@ -11,6 +11,7 @@ import Roles from './pages/Roles';
 import Categories from './pages/Categories';
 import Products from './pages/Products';
 import PaymentMethod from './pages/PaymentMehtod';
+import Order from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -69,6 +70,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <PaymentMethod />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/order"
+                element={
+                  <ProtectedRoute>
+                    <Order />
                   </ProtectedRoute>
                 }
               />

@@ -8,6 +8,7 @@ import {
   toggleProductStatus
 } from '../features/products/productsSlice';
 import { fetchCategories } from '../features/categories/categoriesSlice';
+import { fetchOrders, createOrder } from '../features/orders/ordersSlice';
 
 export default function Products() {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function Products() {
   useEffect(() => {
     dispatch(fetchProducts());
     dispatch(fetchCategories());
+    dispatch(fetchOrders());
   }, [dispatch]);
 
   const handleFile = (e) =>
@@ -70,6 +72,108 @@ export default function Products() {
   };
 
   const apiBase = import.meta.env.VITE_API_URL.replace('/api', '');
+
+  const [cart, setCart] = useState([]);
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const exist = prev.find((item) => item.productId === product.id);
+
+      if (exist) {
+        return prev.map((item) =>
+          item.productId === product.id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          qty: 1
+        }
+      ];
+    });
+  };
+
+  const increaseQty = (productId) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.productId === productId ? { ...item, qty: item.qty + 1 } : item
+      )
+    );
+  };
+
+  const decreaseQty = (productId) => {
+    setCart((prev) =>
+      prev
+        .map((item) =>
+          item.productId === productId ? { ...item, qty: item.qty - 1 } : item
+        )
+        .filter((item) => item.qty > 0)
+    );
+  };
+
+  const [checkoutForm, setCheckoutForm] = useState({
+    paymentMethod: 'COD',
+    shippingFullName: '',
+    shippingPhoneNumber: '',
+    shippingAddress: '',
+    shippingCity: '',
+    shippingProvince: '',
+    shippingPostalCode: '',
+    notes: ''
+  });
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const submitOrder = async () => {
+    if (cart.length === 0) {
+      alert('Cart is empty');
+      return;
+    }
+
+    const payload = {
+      ...checkoutForm,
+      items: cart.map((item) => ({
+        productId: item.productId,
+        qty: item.qty
+      }))
+    };
+
+    try {
+      await dispatch(createOrder(payload)).unwrap();
+      console.log(payload);
+      alert('Order created successfully');
+
+      setCart([]);
+
+      setCheckoutForm({
+        paymentMethod: 'COD',
+        shippingFullName: '',
+        shippingPhoneNumber: '',
+        shippingAddress: '',
+        shippingCity: '',
+        shippingProvince: '',
+        shippingPostalCode: '',
+        notes: ''
+      });
+    } catch (error) {
+      console.log('FULL ERROR:', error);
+      console.log('RESPONSE:', error.response);
+      console.log('STATUS:', error.response?.status);
+      console.log('DATA:', error.response?.data);
+      console.log('PAYLOAD:', payload);
+
+      alert(JSON.stringify(error.response?.data));
+
+      console.error(error);
+      alert(error.message || 'Failed to create order');
+    }
+  };
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   return (
     <div>
@@ -184,9 +288,192 @@ export default function Products() {
           </div>
         </div>
       </form>
-
       <hr />
 
+      {/* Shopping Cart */}
+      <div className="card mt-4">
+        <div className="card-body">
+          <h4>Shopping Cart</h4>
+
+          {cart.map((item) => (
+            <>
+              <React.Fragment key={item.productId}>
+                <hr />
+
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <strong>{item.name}</strong>
+                    <div>Rp {item.price.toLocaleString()}</div>
+                  </div>
+
+                  <div>
+                    <button
+                      className="btn btn-sm btn-secondary me-2"
+                      onClick={() => decreaseQty(item.productId)}
+                    >
+                      -
+                    </button>
+
+                    {item.qty}
+
+                    <button
+                      className="btn btn-sm btn-secondary ms-2"
+                      onClick={() => increaseQty(item.productId)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </React.Fragment>
+            </>
+          ))}
+
+          <hr />
+
+          <div className="mb-3">
+            <strong>Total: Rp {total.toLocaleString()}</strong>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 mb-2">
+              <input
+                className="form-control"
+                placeholder="Full Name"
+                value={checkoutForm.shippingFullName}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingFullName: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-6 mb-2">
+              <input
+                className="form-control"
+                placeholder="Phone Number"
+                value={checkoutForm.shippingPhoneNumber}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingPhoneNumber: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-12 mb-2">
+              <textarea
+                className="form-control"
+                rows={3}
+                placeholder="Shipping Address"
+                value={checkoutForm.shippingAddress}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingAddress: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-4 mb-2">
+              <input
+                className="form-control"
+                placeholder="City"
+                value={checkoutForm.shippingCity}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingCity: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-4 mb-2">
+              <input
+                className="form-control"
+                placeholder="Province"
+                value={checkoutForm.shippingProvince}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingProvince: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-4 mb-2">
+              <input
+                className="form-control"
+                placeholder="Postal Code"
+                value={checkoutForm.shippingPostalCode}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    shippingPostalCode: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-12 mb-2">
+              <textarea
+                className="form-control"
+                rows={2}
+                placeholder="Notes"
+                value={checkoutForm.notes}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    notes: e.target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="col-md-4 mb-3">
+              <select
+                className="form-select"
+                value={checkoutForm.paymentMethod}
+                onChange={(e) =>
+                  setCheckoutForm((prev) => ({
+                    ...prev,
+                    paymentMethod: e.target.value
+                  }))
+                }
+              >
+                <option value="COD">COD</option>
+                <option value="BANK_TRANSFER">Bank Transfer</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="d-flex gap-2">
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={clearCart}
+            >
+              Clear Cart
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={submitOrder}
+            >
+              Submit Order
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Shopping Cart */}
+
+      <hr />
       <div className="row">
         {products.map((p) => (
           <div className="col-md-4 mb-3" key={p.id}>
@@ -196,6 +483,10 @@ export default function Products() {
                   src={`${apiBase}${p.image}`}
                   className="card-img-top"
                   alt={p.name}
+                  style={{
+                    height: '220px',
+                    objectFit: 'cover'
+                  }}
                 />
               )}
               <div className="card-body">
@@ -224,13 +515,19 @@ export default function Products() {
                 </button>
 
                 <button
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger me-2"
                   onClick={() => {
                     if (confirm('Delete product?'))
                       dispatch(deleteProduct(p.id));
                   }}
                 >
                   Delete
+                </button>
+                <button
+                  className="btn btn-sm  btn-primary"
+                  onClick={() => addToCart(p)}
+                >
+                  Add to Cart
                 </button>
               </td>
             </div>

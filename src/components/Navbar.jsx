@@ -24,8 +24,9 @@ export default function Navbar() {
             <>
               <Nav.Link href="/users">Users</Nav.Link>
               <Nav.Link href="/category">Categories</Nav.Link>
-              <Nav.Link href="/product">Products</Nav.Link>
               <Nav.Link href="/payment-method">Payment Methods</Nav.Link>
+              <Nav.Link href="/product">Products</Nav.Link>
+              <Nav.Link href="/order">Orders</Nav.Link>
             </>
           ) : null}
         </Nav>
