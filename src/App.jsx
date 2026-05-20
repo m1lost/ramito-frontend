@@ -21,7 +21,7 @@ function App() {
         <Navbar />
 
         <main className="flex-grow-1 pt-5 mt-4">
-          <div className="container">
+          <div className="container-fluid px-4">
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

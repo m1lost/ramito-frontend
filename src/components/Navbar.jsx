@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <BSNavbar bg="dark" variant="dark" fixed="top">
-      <Container>
+      <div className="container-fluid px-4">
         <BSNavbar.Brand href="/">RAMITO</BSNavbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/">Home</Nav.Link>
@@ -42,7 +42,7 @@ export default function Navbar() {
             </>
           )}
         </Nav>
-      </Container>
+      </div>
     </BSNavbar>
   );
 }

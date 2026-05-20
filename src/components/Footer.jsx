@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
   return (
     <footer className="border-top py-3 mt-4 bg-light">
-      <Container>
+      <div className="container-fluid px-4">
         <Row className="align-items-center">
           <Col md={4}>
             <p className="mb-0 text-muted">&copy; 2026 RAMITO Company, Inc</p>
@@ -29,7 +29,7 @@ const Footer = () => {
             </Nav>
           </Col>
         </Row>
-      </Container>
+      </div>
     </footer>
   );
 };
