@@ -4,6 +4,7 @@ import usersReducer from '../features/users/usersSlice';
 import rolesReducer from '../features/roles/rolesSlice';
 import categoriesReducer from '../features/categories/categoriesSlice';
 import productsReducer from '../features/products/productsSlice';
+import paymentMethodReducer from '../features/paymentMethod/paymentMethodSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     users: usersReducer,
     roles: rolesReducer,
     categories: categoriesReducer,
-    products: productsReducer
+    products: productsReducer,
+    paymentMethods: paymentMethodReducer
   }
 });
 

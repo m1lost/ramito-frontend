@@ -10,6 +10,7 @@ import Users from './pages/Users';
 import Roles from './pages/Roles';
 import Categories from './pages/Categories';
 import Products from './pages/Products';
+import PaymentMethod from './pages/PaymentMehtod';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -60,6 +61,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Products />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/payment-method"
+                element={
+                  <ProtectedRoute>
+                    <PaymentMethod />
                   </ProtectedRoute>
                 }
               />
