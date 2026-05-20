@@ -27,11 +27,25 @@ export const removeOrderItem = createAsyncThunk(
   }
 );
 
-
 const ordersSlice = createSlice({
   name: 'orders',
-  initialState: { list: [], status: 'idle', error: null },
-  reducers: {},
+  initialState: {
+    list: [],
+    selectedOrder: null,
+    status: 'idle',
+    error: null
+  },
+
+  reducers: {
+    clearSelectedOrder: (state) => {
+      state.selectedOrder = null;
+    },
+
+    setSelectedOrder: (state, action) => {
+      state.selectedOrder = action.payload;
+    }
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.fulfilled, (state, action) => {
@@ -39,7 +53,7 @@ const ordersSlice = createSlice({
         state.status = 'succeeded';
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.list = [...state.list, action.payload];
+        state.list.push(action.payload);
       })
       .addCase(removeOrder.fulfilled, (state, action) => {
         state.list = state.list.filter((o) => o.id !== action.payload);
@@ -53,9 +67,10 @@ const ordersSlice = createSlice({
               }
             : o
         );
-      })
-      ;
+      });
   }
 });
+
+export const { clearSelectedOrder, setSelectedOrder } = ordersSlice.actions;
 
 export default ordersSlice.reducer;
