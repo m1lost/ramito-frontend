@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchUsers,
   removeUser,
-  setUserRoles
+  setUserRoles,
+  toggleUserStatus
 } from '../features/users/usersSlice';
 import { fetchRoles } from '../features/roles/rolesSlice';
 import { createUser } from '../features/users/usersSlice';
@@ -78,6 +79,7 @@ export default function Users() {
         <thead className="table-dark">
           <tr>
             <th>Email</th>
+            <th>Status</th>
             <th>Roles</th>
             <th>Actions</th>
           </tr>
@@ -86,6 +88,16 @@ export default function Users() {
           {users.map((u) => (
             <tr key={u.id}>
               <td>{u.email}</td>
+              <td>
+                <button
+                  className={`btn btn-sm me-2 ${
+                    u.isActive ? 'btn-success' : 'btn-danger'
+                  }`}
+                  onClick={() => dispatch(toggleUserStatus(u.id))}
+                >
+                  {u.isActive ? 'Active' : 'Inactive'}
+                </button>
+              </td>
               <td>{u.Roles?.map((r) => r.name).join(', ')}</td>
               <td>
                 {roles.map((r) => (

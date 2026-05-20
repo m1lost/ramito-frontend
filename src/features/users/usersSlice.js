@@ -32,6 +32,14 @@ export const setUserRoles = createAsyncThunk(
   }
 );
 
+export const toggleUserStatus = createAsyncThunk(
+  'users/toggleStatus',
+  async (id) => {
+    const res = await usersService.toggleUserStatusApi(id);
+    return res.data;
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState: { list: [], status: 'idle', error: null },
@@ -60,6 +68,16 @@ const usersSlice = createSlice({
       .addCase(setUserRoles.fulfilled, (state, action) => {
         state.list = state.list.map((u) =>
           u.id === action.payload.id ? action.payload : u
+        );
+      })
+      .addCase(toggleUserStatus.fulfilled, (state, action) => {
+        state.list = state.list.map((u) =>
+          u.id === action.payload.id
+            ? {
+                ...u,
+                isActive: action.payload.isActive
+              }
+            : u
         );
       });
   }

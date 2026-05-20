@@ -53,8 +53,8 @@ export default function Categories() {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Status</th>
-            <th className="text-end">Action</th>
+            <th className="text-center">Status</th>
+            <th className="text-center">Action</th>
           </tr>
         </thead>
 
@@ -63,7 +63,7 @@ export default function Categories() {
             <tr key={c.id}>
               <td>{index + 1}</td>
               <td>{c.name}</td>
-              <td>
+              <td className="text-center">
                 <button
                   className={`btn btn-sm me-2 ${
                     c.isActive ? 'btn-success' : 'btn-danger'
@@ -74,7 +74,7 @@ export default function Categories() {
                 </button>
               </td>
 
-              <td className="text-end">
+              <td className="text-center  ">
                 <button
                   className="btn btn-sm btn-warning me-2"
                   onClick={() => {

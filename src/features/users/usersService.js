@@ -8,3 +8,5 @@ export const deleteUserApi = (id) => api.delete(`/user/${id}`);
 export const setUserRolesApi = (id, roleIds) =>
   api.put(`/user/${id}/roles`, { roleIds });
 export const getProfileApi = () => api.get('/users/me');
+export const toggleUserStatusApi = (id) =>
+  api.patch(`/user/${id}/toggle-active`);
