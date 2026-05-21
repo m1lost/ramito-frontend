@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navbar as BSNavbar, Nav, Button } from 'react-bootstrap';
+import { Navbar as BSNavbar, Container, Nav, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
@@ -18,19 +18,10 @@ export default function Navbar() {
     }
   }, [token, profile, dispatch]);
 
-  // jangan render menu sebelum profile selesai diambil
-  if (token && !profile) {
-    return (
-      <BSNavbar bg="dark" variant="dark" fixed="top">
-        <div className="container-fluid px-4">
-          <BSNavbar.Brand href="/">RAMITO</BSNavbar.Brand>
-        </div>
-      </BSNavbar>
-    );
-  }
-
   const roles = profile?.Roles?.map((r) => r.name.toLowerCase()) || [];
   const isUser = roles.includes('user');
+
+  console.log(profile);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -42,27 +33,27 @@ export default function Navbar() {
       <div className="container-fluid px-4">
         <BSNavbar.Brand href="/">RAMITO</BSNavbar.Brand>
         <Nav className="me-auto">
-          {!token ? (
+          {token ? null : (
             <>
               <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="/about">About</Nav.Link>
             </>
-          ) : (
-            <>
-              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+          )}
 
-              {!isUser && (
-                <>
-                  <Nav.Link href="/users">Users</Nav.Link>
-                  <Nav.Link href="/category">Categories</Nav.Link>
-                  <Nav.Link href="/payment-method">Payment Methods</Nav.Link>
-                </>
-              )}
+          {token ? (
+            <>
+              <Nav.Link href="/dashboard">
+                Dashboard {console.log(roles)}
+              </Nav.Link>
+
+              <Nav.Link href="/users">Users</Nav.Link>
+              <Nav.Link href="/category">Categories</Nav.Link>
+              <Nav.Link href="/payment-method">Payment Methods</Nav.Link>
 
               <Nav.Link href="/product">Products</Nav.Link>
               <Nav.Link href="/order">Orders</Nav.Link>
             </>
-          )}
+          ) : null}
         </Nav>
         <Nav>
           {token ? (

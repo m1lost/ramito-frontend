@@ -15,6 +15,7 @@ import Order from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
+import VerifyEmail from './pages/Auth/VerifyEmail';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
               <Route path="/home" element={<Home />} />
               <Route path="/about" element={<About />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
 
               <Route
                 path="/dashboard"
