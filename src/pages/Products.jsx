@@ -181,125 +181,149 @@ export default function Products() {
   };
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
+  const token = useSelector((state) => state.auth.token);
+  let roles = [];
+  let userEmail = '';
+
+  if (token) {
+    try {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+
+      roles = decoded.roles?.map((r) => r.toLowerCase()) || [];
+      userEmail = decoded.email || '';
+    } catch (error) {
+      roles = [];
+      userEmail = '';
+    }
+  }
+
+  const isAdmin = roles.includes('admin');
+  const isStaff = roles.includes('staff');
+
   return (
     <div>
       <h3>Products</h3>
-      <form onSubmit={submit} className="mb-3">
-        <div className="row">
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Name</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Product name"
-              value={form.name}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  name: e.target.value
-                }))
-              }
-              required
-            />
-          </div>
 
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Category</label>
-            <select
-              className="form-select"
-              value={form.categoryId}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  categoryId: e.target.value
-                }))
-              }
-              required
-            >
-              <option value="">Select category</option>
+      {(isAdmin || isStaff) && (
+        <>
+          <form onSubmit={submit} className="mb-3">
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Product name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      name: e.target.value
+                    }))
+                  }
+                  required
+                />
+              </div>
 
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Category</label>
+                <select
+                  className="form-select"
+                  value={form.categoryId}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      categoryId: e.target.value
+                    }))
+                  }
+                  required
+                >
+                  <option value="">Select category</option>
 
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Price</label>
-            <input
-              className="form-control"
-              type="number"
-              placeholder="Price"
-              value={form.price}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  price: e.target.value
-                }))
-              }
-              required
-            />
-          </div>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Stock</label>
-            <input
-              className="form-control"
-              type="number"
-              placeholder="Stock"
-              value={form.stock}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  stock: e.target.value
-                }))
-              }
-              required
-            />
-          </div>
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Price</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  placeholder="Price"
+                  value={form.price}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      price: e.target.value
+                    }))
+                  }
+                  required
+                />
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Picture</label>
-            <input
-              type="file"
-              className="form-control"
-              onChange={handleFile}
-              accept="image/*"
-            />
-          </div>
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Stock</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  placeholder="Stock"
+                  value={form.stock}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      stock: e.target.value
+                    }))
+                  }
+                  required
+                />
+              </div>
 
-          <div className="col-md-12 mb-3">
-            <label className="form-label">Description</label>
-            <textarea
-              className="form-control"
-              placeholder="Description"
-              rows={4}
-              value={form.description}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  description: e.target.value
-                }))
-              }
-              required
-            />
-          </div>
+              <div className="col-md-6 mb-3">
+                <label className="form-label">Picture</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  onChange={handleFile}
+                  accept="image/*"
+                />
+              </div>
 
-          <div className="col-12">
-            <button className="btn btn-primary">
-              {editing ? 'Update' : 'Create'}
-            </button>
-          </div>
-        </div>
-      </form>
-      <hr />
+              <div className="col-md-12 mb-3">
+                <label className="form-label">Description</label>
+                <textarea
+                  className="form-control"
+                  placeholder="Description"
+                  rows={4}
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      description: e.target.value
+                    }))
+                  }
+                  required
+                />
+              </div>
+
+              <div className="col-12">
+                <button className="btn btn-primary">
+                  {editing ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </div>
+          </form>
+          <hr />
+        </>
+      )}
 
       {/* Shopping Cart */}
       <div className="card mt-4">
         <div className="card-body">
-          <h4>Shopping Cart</h4>
+          <h4>Shopping Cart {console.log(userEmail)}</h4>
 
           {cart.map((item) => (
             <>
@@ -509,31 +533,36 @@ export default function Products() {
               </div>
 
               <td className="text-end p-2">
-                <button
-                  className={`btn btn-sm me-2 ${
-                    p.isActive ? 'btn-success' : 'btn-danger'
-                  }`}
-                  onClick={() => dispatch(toggleProductStatus(p.id))}
-                >
-                  {p.isActive ? 'Active' : 'Inactive'}
-                </button>
+                .
+                {(isAdmin || isStaff) && (
+                  <>
+                    <button
+                      className={`btn btn-sm me-2 ${
+                        p.isActive ? 'btn-success' : 'btn-danger'
+                      }`}
+                      onClick={() => dispatch(toggleProductStatus(p.id))}
+                    >
+                      {p.isActive ? 'Active' : 'Inactive'}
+                    </button>
 
-                <button
-                  className="btn btn-sm btn-secondary me-2"
-                  onClick={() => startEdit(p)}
-                >
-                  Edit
-                </button>
+                    <button
+                      className="btn btn-sm btn-secondary me-2"
+                      onClick={() => startEdit(p)}
+                    >
+                      Edit
+                    </button>
 
-                <button
-                  className="btn btn-sm btn-danger me-2"
-                  onClick={() => {
-                    if (confirm('Delete product?'))
-                      dispatch(deleteProduct(p.id));
-                  }}
-                >
-                  Delete
-                </button>
+                    <button
+                      className="btn btn-sm btn-danger me-2"
+                      onClick={() => {
+                        if (confirm('Delete product?'))
+                          dispatch(deleteProduct(p.id));
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
                 <button
                   className="btn btn-sm  btn-primary"
                   onClick={() => addToCart(p)}
