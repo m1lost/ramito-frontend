@@ -48,7 +48,11 @@ export const getProfile = createAsyncThunk('users/getProfile', async () => {
 const usersSlice = createSlice({
   name: 'users',
   initialState: { list: [], status: 'idle', error: null },
-  reducers: {},
+  reducers: {
+    clearProfile: (state) => {
+      state.profile = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.fulfilled, (state, action) => {

@@ -32,7 +32,7 @@ function App() {
               <Route path="/about" element={<About />} />
 
               <Route
-                path="/"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     <Dashboard />
